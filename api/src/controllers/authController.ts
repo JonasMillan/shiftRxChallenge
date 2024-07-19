@@ -21,7 +21,23 @@ const login = async (req: Request, res: Response) => {
   }
 }
 
+const getProfile = async (req: Request, res: Response) => {
+  try {
+    const token = req.headers.authorization?.split(' ')[1]; // Obtener el token del encabezado Authorization
+
+    if (!token) {
+      return res.status(401).json({ error: 'No token provided' });
+    }
+
+    const user = await authService.getAuthenticatedUserProfile(token);
+    res.json(user);
+  } catch (error) {
+    res.status(401).json({ error: (error as Error).message }); // Error 401 Unauthorized
+  }
+}
+
 export default {
+  getProfile,
   register,
   login,
 };

@@ -1,7 +1,9 @@
 import express, { Request, Response } from 'express';
 import bodyParser from 'body-parser';
-import cors from 'cors';
+import cors, { CorsOptions } from 'cors';
+
 import api from './routes' 
+
 
 const app = express();
 const port = 4200;
@@ -9,12 +11,23 @@ const port = 4200;
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
 
-app.use(function(req, res, next) {
-  res.header("Access-Control-Allow-Origin", "*");
-  res.header('Access-Control-Allow-Methods', 'POST, GET, PUT, DELETE, OPTIONS');
-  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-  next();
-});
+const allowedOrigins: string[] = ['http://localhost:3000']; 
+const allowedMethods: string[] = ['GET', 'POST', 'PUT', 'DELETE'];
+
+const corsOptions: CorsOptions = {
+  origin: (origin: string | undefined, callback: (err: Error | null, allow?: boolean) => void) => {
+    if (allowedOrigins.includes(origin || '') || !origin) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  methods: allowedMethods,
+  optionsSuccessStatus: 200,
+  credentials: true,
+};
+
+app.use(cors(corsOptions));
 
 app.use("/api", api);
 
