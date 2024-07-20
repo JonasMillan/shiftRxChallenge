@@ -16,7 +16,6 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { useUser } from "@/app/context/UserContext";
-import { useToken } from "@/app/context/TokenContext";
 import { UserResponse } from "@/app/commons/interfaces";
 
 
@@ -31,8 +30,7 @@ const FormSchema = z.object({
 
 const LogInForm = () => {
   const router = useRouter();
-  const { setUser } = useUser();
-  const { setToken } = useToken();
+  const { setUserData } = useUser();
 
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
@@ -53,9 +51,8 @@ const LogInForm = () => {
     );
 
     if (response.ok) {
-      const { user, token }: UserResponse = await response.json();
-      setUser(user);
-      setToken(token);
+      const userResponse = await response.json();
+      setUserData(userResponse);
     } else {
       const errorData = await response.json();
       throw new Error(errorData.error || "something went wrong.");

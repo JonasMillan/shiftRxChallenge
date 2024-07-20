@@ -1,4 +1,5 @@
 "use client";
+
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
@@ -9,23 +10,19 @@ import {
   navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu";
 import { useUser } from "@/app/context/UserContext";
-import { Button } from "./ui/button";
-import { useToken } from "@/app/context/TokenContext";
+import { Button } from "./button";
 import { useRouter } from "next/navigation";
 import { memo } from "react";
 
 const NavBar = () => {
   const router = useRouter();
-  const { removeToken } = useToken();
-  const { user, logout } = useUser();
+  const { userData, logout } = useUser();
   const pathname = usePathname();
 
   const handleLogOut = () => {
     logout();
-    removeToken();
-    router.push("/Login");
+    router.push("/login");
   };
-
   return (
     <div className="w-full py-3">
       <NavigationMenu className="w-full">
@@ -40,12 +37,12 @@ const NavBar = () => {
               </NavigationMenuLink>
             </Link>
           </NavigationMenuItem>
-          {!user ? (
+          {!userData?.user ? (
             <div className="flex justify-end">
               <NavigationMenuItem>
-                <Link href="/Register" legacyBehavior passHref>
+                <Link href="/register" legacyBehavior passHref>
                   <NavigationMenuLink
-                    active={pathname === "/Register"}
+                    active={pathname === "/register"}
                     className={navigationMenuTriggerStyle()}
                   >
                     Register
@@ -54,9 +51,9 @@ const NavBar = () => {
               </NavigationMenuItem>
 
               <NavigationMenuItem>
-                <Link href="/Login" legacyBehavior passHref>
+                <Link href="/login" legacyBehavior passHref>
                   <NavigationMenuLink
-                    active={pathname === "/Login"}
+                    active={pathname === "/login"}
                     className={navigationMenuTriggerStyle()}
                   >
                     Login
@@ -66,7 +63,17 @@ const NavBar = () => {
             </div>
           ) : (
             <div className="flex flex-row items-center space-x-5">
-              <p>Hello {user.name}</p>
+              <NavigationMenuItem>
+                <Link href="/create-auctions" legacyBehavior passHref>
+                  <NavigationMenuLink
+                    active={pathname === "/create-auctions"}
+                    className={navigationMenuTriggerStyle()}
+                  >
+                    Create Auction
+                  </NavigationMenuLink>
+                </Link>
+              </NavigationMenuItem>
+              <p>Hello {userData?.user?.name}</p>
               <Button onClick={handleLogOut}>LogOut</Button>
             </div>
           )}

@@ -1,11 +1,7 @@
-"use client";
-import React, {
-  createContext,
-  PropsWithChildren,
-  useContext,
-  useEffect,
-  useState,
-} from "react";
+'use client';
+
+import React, { createContext, PropsWithChildren, useContext, useEffect, useState } from "react";
+import useLocalStorage from "../hooks/useLocalStorage";
 
 export type User = {
   id: number;
@@ -13,46 +9,32 @@ export type User = {
   email: string;
 };
 
+export type UserData = {
+  user: User;
+  token: string;
+}
+
 interface UserContextType {
-  user: User | null;
-  setUser: (user: User | null) => void;
+  userData: UserData | null;
+  setUserData: (user: User | null) => void;
   logout: () => void;
 }
 
 const UserContext = createContext<UserContextType>({
-  user: null,
-  setUser: () => {},
+  userData: null,
+  setUserData: () => {},
   logout: () => {},
 });
 
 export const UserProvider: React.FC<PropsWithChildren<{}>> = ({ children }) => {
-  const [user, setUser] = useState<User | null>(() => {
-    const storedUser = localStorage.getItem("user");
-    return storedUser ? JSON.parse(storedUser) : null;
-  });
-  useEffect(() => {
-
-    const storedUser = localStorage.getItem("user");
-    if (storedUser) {
-      setUser(JSON.parse(storedUser));
-    }
-  }, []);
-
-  useEffect(() => {
-    if (user) {
-      localStorage.setItem("user", JSON.stringify(user));
-    } else {
-      localStorage.removeItem("user");
-    }
-  }, [user]);
+  const [userData, setUserData] = useLocalStorage("user", null);
 
   const logout = () => {
-    setUser(null);
-    localStorage.removeItem("user");
+    setUserData(null);
   };
 
   return (
-    <UserContext.Provider value={{ user, setUser, logout }}>
+    <UserContext.Provider value={{ userData, setUserData, logout }}>
       {children}
     </UserContext.Provider>
   );
@@ -61,7 +43,7 @@ export const UserProvider: React.FC<PropsWithChildren<{}>> = ({ children }) => {
 export const useUser = () => {
   const context = useContext(UserContext);
   if (!context) {
-    throw new Error("useUser most be use inside of UserProvider");
+    throw new Error("useUser must be used inside of UserProvider");
   }
   return context;
 };
