@@ -1,5 +1,5 @@
 "use client";
-
+import { memo } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -14,6 +14,9 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { User, useUser } from "@/app/context/UserContext";
+import { useToken } from "@/app/context/TokenContext";
+import { UserResponse } from "@/app/commons/interfaces";
 
 const FormSchema = z.object({
   email: z.string().email().min(5, {
@@ -28,7 +31,8 @@ const FormSchema = z.object({
 });
 
 const RegistrationForm = () => {
-  // const router = useRouter();
+  const { setUser } = useUser();
+  const { setToken } = useToken();
 
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
@@ -39,19 +43,25 @@ const RegistrationForm = () => {
     },
   });
 
- const onSubmit = async (data: z.infer<typeof FormSchema>) => {
-    const response = await fetch("http://localhost:4200/api/auth/sign-up", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ ...data }),
-    });
-    console.log(response)
-    // if (response.ok) {
-    //   router.push("/");
-    // } else {
-    //   // Handle errors
-    // }
-  }
+  const onSubmit = async (data: z.infer<typeof FormSchema>) => {
+    const response: Response = await fetch(
+      "http://localhost:4200/api/auth/sign-up",
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ...data }),
+      }
+    );
+
+    if (response.ok) {
+      const { user, token }: UserResponse = await response.json();
+      setUser(user);
+      setToken(token);
+    } else {
+      const errorData = await response.json();
+      throw new Error(errorData.error || "something went wrong.");
+    }
+  };
 
   return (
     <Form {...form}>
@@ -108,4 +118,4 @@ const RegistrationForm = () => {
   );
 };
 
-export default RegistrationForm;
+export default memo(RegistrationForm);

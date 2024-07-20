@@ -1,15 +1,17 @@
 import express, { Request, Response } from 'express';
 import bodyParser from 'body-parser';
 import cors, { CorsOptions } from 'cors';
+import * as dotenv from 'dotenv';
+import api from './routes' ;
 
-import api from './routes' 
-
+dotenv.config()
 
 const app = express();
 const port = 4200;
 
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
+
 
 const allowedOrigins: string[] = ['http://localhost:3000']; 
 const allowedMethods: string[] = ['GET', 'POST', 'PUT', 'DELETE'];

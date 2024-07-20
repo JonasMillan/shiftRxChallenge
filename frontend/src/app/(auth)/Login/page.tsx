@@ -4,9 +4,9 @@ import {
   CardTitle,
   CardContent,
 } from "@/components/ui/card";
-import LogInForm from "./LoginForm";
+import LogInForm from "./LogInForm";
 
-const Register = () => {
+const Register = async () => {
   return (
     <main className="flex justify-center items-center h-screen">
       <Card className="w-full sm:w-1/2 md:w-1/3 lg:w-1/4">
@@ -14,7 +14,7 @@ const Register = () => {
           <CardTitle>Log In</CardTitle>
         </CardHeader>
         <CardContent>
-          <LogInForm />
+          <LogInForm/>
         </CardContent>
       </Card>
     </main>

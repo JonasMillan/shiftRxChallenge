@@ -7,7 +7,7 @@ import {
 } from "@/components/ui/card";
 import RegistrationForm from "./RegistrationForm";
 
-const Register = () => {
+const Register = async () => {
 
   return (
     <main className="flex justify-center items-center h-screen">

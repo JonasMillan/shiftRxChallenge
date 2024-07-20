@@ -6,6 +6,7 @@ const prisma = new PrismaClient();
 
 const generateToken = (userId: number, tokenVersion: number): string => {
     const secret = process.env.JWT_SECRET ?? null;
+
     if(!secret) {
       throw new Error("JWT_SECRET not found in environment variables");
     }
@@ -15,11 +16,20 @@ const generateToken = (userId: number, tokenVersion: number): string => {
     });
 }
 
-const registerUser = async (userData: { name: string; email: string; password: string }): Promise<User> => {
+const registerUser = async (userData: { name: string; email: string; password: string }): Promise<Omit<User, 'password'>> => {
   const hashedPassword = await bcrypt.hash(userData.password, 10);
-  return await prisma.user.create({
+
+  const user = await prisma.user.create({
     data: { ...userData, password: hashedPassword },
+    select: {
+      id: true,
+      name: true,
+      email: true,
+      tokenVersion: true
+    },
   });
+
+  return user;
 }
 
 const loginUser = async (email: string, password: string): Promise<{ user: User; token: string }> => {
