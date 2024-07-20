@@ -1,7 +1,35 @@
-const CreateAuction = async () => {
-    return (
-        <h1>Create Auction</h1>
-    )
-}
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+  CardContent,
+} from "@/components/ui/card";
+import CreateAuctionForm from "./CreateAuctionForm";
 
-export default CreateAuction
+const CreateAuction = async () => {
+  
+  // const { userData } = useUser();
+  
+  // if (!userData?.token) {
+  //   redirect("/login");
+  // }
+
+  return (
+    <main className="flex justify-center items-center h-screen">
+      <Card className="w-full sm:w-1/2 md:w-1/2 lg:w-2/4">
+        <CardHeader>
+          <CardTitle>Create Auction</CardTitle>
+          <CardDescription>
+            Please add the details of your Auction!
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <CreateAuctionForm />
+        </CardContent>
+      </Card>
+    </main>
+  );
+};
+
+export default CreateAuction;

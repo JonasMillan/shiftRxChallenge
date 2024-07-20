@@ -16,8 +16,6 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { useUser } from "@/app/context/UserContext";
-import { UserResponse } from "@/app/commons/interfaces";
-
 
 const FormSchema = z.object({
   email: z.string().email().min(5, {
