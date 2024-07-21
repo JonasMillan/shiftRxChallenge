@@ -14,7 +14,9 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { useUser } from "@/app/context/UserContext";
+import { useRouter } from "next/navigation";
+import { register } from "@/app/server/auth";
+import { toast } from "@/components/ui/use-toast";
 
 const FormSchema = z.object({
   email: z.string().email().min(5, {
@@ -29,7 +31,7 @@ const FormSchema = z.object({
 });
 
 const RegistrationForm = () => {
-  const { setUserData } = useUser();
+  const router = useRouter();
 
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
@@ -41,21 +43,13 @@ const RegistrationForm = () => {
   });
 
   const onSubmit = async (data: z.infer<typeof FormSchema>) => {
-    const response: Response = await fetch(
-      "http://localhost:4200/api/auth/sign-up",
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...data }),
-      }
-    );
-
-    if (response.ok) {
-      const userResponse = await response.json();
-      setUserData(userResponse);
+    const registerResponse = await register(data)
+    if (registerResponse.success) {
+      router.push("/dashboard");
     } else {
-      const errorData = await response.json();
-      throw new Error(errorData.error || "something went wrong.");
+      toast({
+        title: "Unexpected error. Please try again.",
+      });
     }
   };
 

@@ -1,7 +1,6 @@
 "use client";
 import { memo } from "react";
 import { useForm } from "react-hook-form";
-import { useRouter } from "next/navigation";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 
@@ -15,36 +14,48 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { login } from "@/app/server/auth";
 import { toast } from "@/components/ui/use-toast";
+import { useRouter } from "next/navigation";
+import { editAuction } from "@/app/server/actions";
 
 const FormSchema = z.object({
-  email: z.string().email().min(5, {
-    message: "Email must be at least 2 characters.",
+  title: z.string().min(5, {
+    message: "Title must be at least 5 characters.",
   }),
-  password: z.string().min(2, {
-    message: "password must be at least 5 characters.",
+  description: z.string().min(10, {
+    message: "Description must be at least 10 characters.",
   }),
 });
 
-const LogInForm = () => {
+const CreateAuctionForm = ({
+  title,
+  description,
+  auctionId
+}: {
+  title: string;
+  description: string;
+  auctionId: number
+}) => {
   const router = useRouter();
-
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
-      email: "",
-      password: "",
+      title,
+      description,
     },
   });
 
   const onSubmit = async (data: z.infer<typeof FormSchema>) => {
-    const isLogin = await login(data);
-    if (isLogin.success) {
-      router.push("/dashboard");
-    } else {      
+    const auctionResponse = await editAuction(data, auctionId);
+
+    if (auctionResponse.success) {
       toast({
-        title: "Incorrect credentials. Please try again.",
+        title: "You submitted a Auction!!!",
+      });
+      router.push("/dashboard");
+    } else {
+      toast({
+        title: auctionResponse.errorMessage,
       });
     }
   };
@@ -54,12 +65,12 @@ const LogInForm = () => {
       <form onSubmit={form.handleSubmit(onSubmit)}>
         <FormField
           control={form.control}
-          name="email"
+          name="title"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Email</FormLabel>
+              <FormLabel>Title</FormLabel>
               <FormControl>
-                <Input placeholder="Email" {...field} />
+                <Input placeholder="Title" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -67,28 +78,23 @@ const LogInForm = () => {
         />
         <FormField
           control={form.control}
-          name="password"
+          name="description"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Password</FormLabel>
+              <FormLabel>Description</FormLabel>
               <FormControl>
-                <Input
-                  className="my=2"
-                  placeholder="password"
-                  type="password"
-                  {...field}
-                />
+                <Input placeholder="Description" type="textarea" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
         <Button type="submit" className="my-3">
-          LogIn!
+          Edit Auction!
         </Button>
       </form>
     </Form>
   );
 };
 
-export default memo(LogInForm);
+export default memo(CreateAuctionForm);

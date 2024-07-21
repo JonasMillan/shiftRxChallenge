@@ -1,7 +1,8 @@
 "use client";
-
+import { useRouter, usePathname } from "next/navigation";
+import { memo, useEffect, useState } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+
 import {
   NavigationMenu,
   NavigationMenuList,
@@ -9,20 +10,34 @@ import {
   NavigationMenuLink,
   navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu";
-import { useUser } from "@/app/context/UserContext";
 import { Button } from "./button";
-import { useRouter } from "next/navigation";
-import { memo } from "react";
+import { getUserData, logout } from "@/app/server/auth";
+
+type UserData = {
+  id: number;
+  name: string;
+  email: string;
+};
 
 const NavBar = () => {
+  const [userData, setUserData] = useState<UserData | null>(null);
   const router = useRouter();
-  const { userData, logout } = useUser();
   const pathname = usePathname();
 
   const handleLogOut = () => {
     logout();
     router.push("/login");
   };
+
+  useEffect(() => {
+    async function fetchData() {
+      const data = await getUserData();
+      setUserData(data);
+    }
+
+    fetchData();
+  }, []);
+
   return (
     <div className="w-full py-3">
       <NavigationMenu className="w-full">
@@ -37,7 +52,7 @@ const NavBar = () => {
               </NavigationMenuLink>
             </Link>
           </NavigationMenuItem>
-          {!userData?.user ? (
+          {!userData?.name ? (
             <div className="flex justify-end">
               <NavigationMenuItem>
                 <Link href="/register" legacyBehavior passHref>
@@ -64,16 +79,26 @@ const NavBar = () => {
           ) : (
             <div className="flex flex-row items-center space-x-5">
               <NavigationMenuItem>
-                <Link href="/create-auctions" legacyBehavior passHref>
+                <Link href="/create-auction" legacyBehavior passHref>
                   <NavigationMenuLink
-                    active={pathname === "/create-auctions"}
+                    active={pathname === "/create-auction"}
                     className={navigationMenuTriggerStyle()}
                   >
                     Create Auction
                   </NavigationMenuLink>
                 </Link>
               </NavigationMenuItem>
-              <p>Hello {userData?.user?.name}</p>
+              <NavigationMenuItem>
+                <Link href="/dashboard" legacyBehavior passHref>
+                  <NavigationMenuLink
+                    active={pathname === "/dashboard"}
+                    className={navigationMenuTriggerStyle()}
+                  >
+                    Dashboard
+                  </NavigationMenuLink>
+                </Link>
+              </NavigationMenuItem>
+              <p>Hello {userData?.name}</p>
               <Button onClick={handleLogOut}>LogOut</Button>
             </div>
           )}

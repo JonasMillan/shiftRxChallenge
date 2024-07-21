@@ -8,12 +8,6 @@ import {
 import CreateAuctionForm from "./CreateAuctionForm";
 
 const CreateAuction = async () => {
-  
-  // const { userData } = useUser();
-  
-  // if (!userData?.token) {
-  //   redirect("/login");
-  // }
 
   return (
     <main className="flex justify-center items-center h-screen">

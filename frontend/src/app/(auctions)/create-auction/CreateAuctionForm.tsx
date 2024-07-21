@@ -16,8 +16,8 @@ import {
 import { Input } from "@/components/ui/input";
 import { DatePicker } from "@/components/ui/DatePicker";
 import { toast } from "@/components/ui/use-toast";
-import { useUser } from "@/app/context/UserContext";
 import { useRouter } from "next/navigation";
+import { createAuction } from "@/app/server/actions";
 
 const FormSchema = z.object({
   title: z.string().min(5, {
@@ -38,7 +38,6 @@ const FormSchema = z.object({
 
 const CreateAuctionForm = () => {
   const router = useRouter();
-  const { userData } = useUser();
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
@@ -50,29 +49,17 @@ const CreateAuctionForm = () => {
   });
 
   const onSubmit = async (data: z.infer<typeof FormSchema>) => {
-    const response: Response = await fetch(
-      "http://localhost:4200/api/auctions",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${userData?.token}`,
-        },
-        body: JSON.stringify({ ...data }),
-      }
-    );
-
-    console.log("🚀 ~ onSubmit ~ response:", response);
-    if (response.ok) {
+    const auctionResponse = await createAuction(data);
+    if (auctionResponse.success) {
       toast({
         title: "You submitted a Auction!!!",
       });
+      router.push("/dashboard");
     } else {
-      const errorData = await response.json();
-      throw new Error(errorData.error || "something went wrong.");
+      toast({
+        title: auctionResponse.errorMessage,
+      });
     }
-
-    router.push("/dashboard");
   };
 
   return (
