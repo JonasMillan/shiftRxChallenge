@@ -26,7 +26,6 @@ import Link from "next/link";
 import { deleteAuction } from "@/app/server/actions";
 import { toast } from "./use-toast";
 
-
 type Seller = {
   name: string;
 };
@@ -63,7 +62,7 @@ const Auction = ({
         title: deleteResponse.errorMessage,
       });
     }
-  }
+  };
 
   const handleEdit = (id: number) => {
     router.push(`/edit-auction/${id}`);
@@ -80,16 +79,30 @@ const Auction = ({
         <p>ending: {endTime}</p>
         <p>by: {seller?.name}</p>
       </CardContent>
-      <CardFooter className="flex space-x-5">
-        <Link href={`/auction/${id}`} legacyBehavior passHref>
-          <Button>Check the Auction</Button>
-        </Link>
+      <CardFooter className="flex flex-col md:flex-row md:space-x-5 flex-wrap md:flex-nowrap items-center justify-between md:justify-start">
+        <div className="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-2 w-full md:w-auto mb-4 md:mb-0">
+          <Link href={`/auction/${id}`} legacyBehavior passHref>
+            <Button className="w-full md:w-auto">Auction</Button>
+          </Link>
+          <Link href={`/socket-auction/${id}`} legacyBehavior passHref>
+            <Button className="w-full md:w-auto">Socket Auction</Button>
+          </Link>
+        </div>
+
         {isEditable && (
-          <>
-            <Button variant="secondary" onClick={() => handleEdit(id)}>Edit</Button>
+          <div className="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-2 w-full md:w-auto">
+            <Button
+              variant="secondary"
+              onClick={() => handleEdit(id)}
+              className="w-full md:w-auto"
+            >
+              Edit
+            </Button>
             <AlertDialog>
               <AlertDialogTrigger asChild>
-                <Button variant="destructive" >Delete</Button>
+                <Button variant="destructive" className="w-full md:w-auto">
+                  Delete
+                </Button>
               </AlertDialogTrigger>
               <AlertDialogContent>
                 <AlertDialogHeader>
@@ -107,7 +120,7 @@ const Auction = ({
                 </AlertDialogFooter>
               </AlertDialogContent>
             </AlertDialog>
-          </>
+          </div>
         )}
       </CardFooter>
     </Card>

@@ -1,4 +1,4 @@
-import { Auction, Bid, Prisma, PrismaClient } from "@prisma/client";
+import { PrismaClient } from "@prisma/client";
 import { BidsWithUser } from "../commons/types";
 
 const prisma = new PrismaClient();
@@ -74,7 +74,7 @@ const getBidsForAuction = async (auctionId: number): Promise<BidsWithUser[]> => 
 
     return bids;
   } catch (error) {
-    throw new Error("Internal error creating bid.");
+    throw new Error("Internal getting bids.");
   }
 };
 
