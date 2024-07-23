@@ -84,9 +84,6 @@ const Auction = ({
           <Link href={`/auction/${id}`} legacyBehavior passHref>
             <Button className="w-full md:w-auto">Auction</Button>
           </Link>
-          <Link href={`/socket-auction/${id}`} legacyBehavior passHref>
-            <Button className="w-full md:w-auto">Socket Auction</Button>
-          </Link>
         </div>
 
         {isEditable && (

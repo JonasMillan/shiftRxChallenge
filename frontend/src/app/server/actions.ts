@@ -1,7 +1,7 @@
 "use server";
 
 import { getToken } from "./auth";
-import { AuctionType, EditAuctionType, PostBid } from "../commons/types";
+import { AuctionFormType,  EditAuctionType, PostBid } from "../commons/types";
 import { revalidatePath } from "next/cache";
 
 export async function deleteAuction(id: number) {
@@ -24,7 +24,7 @@ export async function deleteAuction(id: number) {
   return deleteResponse;
 }
 
-export async function createAuction(params: AuctionType) {
+export async function createAuction(params: AuctionFormType) {
   const token = await getToken();
 
   const response: Response = await fetch("http://api:4200/api/auctions", {

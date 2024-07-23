@@ -18,6 +18,13 @@ export type AuctionType = {
   seller: Seller;
 };
 
+export type AuctionFormType = {
+  title: string;
+  description: string;
+  startingPrice: number;
+  endTime: Date;
+};
+
 export type EditAuctionType = {
   title: string;
   description: string;

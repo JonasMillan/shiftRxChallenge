@@ -14,15 +14,10 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { MenuIcon } from "lucide-react";
-
-type UserData = {
-  id: number;
-  name: string;
-  email: string;
-};
+import { User } from "@/app/commons/types";
 
 const NavBar = async () => {
-  const userData: UserData | null = await getUserData();
+  const userData: User | null = await getUserData();
 
   return (
     <header className="flex h-20 w-full shrink-0 items-center px-4 md:px-6">
