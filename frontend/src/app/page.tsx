@@ -17,8 +17,8 @@ export default async function Home() {
     <main className="flex flex-col items-center justify-between ">
       <h1 className="text-xl">Welcome ShiftRx Challenge</h1>
 
-      <div className="flex flex-wrap p-2 justify-evenly">
-        {auctions.length &&
+      <div className="flex flex-wrap justify-around">
+        {!!auctions.length &&
           auctions.map(
             ({
               id,

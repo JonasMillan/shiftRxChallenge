@@ -50,7 +50,7 @@ const CreateAuctionForm = ({
 
     if (auctionResponse.success) {
       toast({
-        title: "You submitted a Auction!!!",
+        title: "You edit a Auction!!!",
       });
       router.push("/dashboard");
     } else {

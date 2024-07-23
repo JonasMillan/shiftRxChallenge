@@ -1,17 +1,14 @@
 "use server";
 
 import { cookies } from "next/headers";
-import { User } from "../commons/types";
+import { User, UserResponse } from "../commons/types";
+import { redirect } from "next/navigation";
 
 type UserData = {
   email: string;
   password: string;
 };
 
-type UserResponse = {
-  user: User;
-  token: string;
-};
 
 type UserRegistrationParams = {
   name: string;
@@ -81,6 +78,7 @@ export async function logout() {
   const cookieStore = cookies();
   cookieStore.delete("authToken");
   cookieStore.delete("userData");
+  redirect("/login")
 }
 
 export async function register(params: UserRegistrationParams) {

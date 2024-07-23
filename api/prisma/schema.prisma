@@ -35,7 +35,6 @@ model Bid {
   user       User      @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("bids")
-  @@unique([auctionId, userId])
 }
 
 model User {

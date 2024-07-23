@@ -86,10 +86,10 @@ const Auction = ({
         </Link>
         {isEditable && (
           <>
-            <Button onClick={() => handleEdit(id)}>Edit</Button>
+            <Button variant="secondary" onClick={() => handleEdit(id)}>Edit</Button>
             <AlertDialog>
               <AlertDialogTrigger asChild>
-                <Button>Delete</Button>
+                <Button variant="destructive" >Delete</Button>
               </AlertDialogTrigger>
               <AlertDialogContent>
                 <AlertDialogHeader>

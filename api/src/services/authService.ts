@@ -1,6 +1,7 @@
-import { PrismaClient, User } from '@prisma/client';
+import { Auction, Bid, PrismaClient, User } from '@prisma/client';
 import jwt, { JwtPayload } from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
+import { BidsWithUser } from '../commons/types';
 
 const prisma = new PrismaClient();
 
@@ -51,32 +52,43 @@ const loginUser = async (email: string, password: string): Promise<{ user: User;
   return { user, token };
 }
 
-const getAuthenticatedUserProfile = async (token: string): Promise<User> => {
-  try {
-    const secretKey = process.env.JWT_SECRET;
-    if (!secretKey) {
-      throw new Error("JWT_SECRET not found in environment variables");
-    }
-    
-    const decodedToken = jwt.verify(token, secretKey) as JwtPayload;
-    const userId = decodedToken.userId;
+const getProfile = async (userId: number|null): Promise<{ auctions: Auction[], bids: BidsWithUser[] }> => {
+  if (!userId){
+    throw new Error('Invalid Credentials');
+  }
 
-    const user = await prisma.user.findUnique({
-      where: { id: userId },
+  try {
+    const auctions = await prisma.auction.findMany({
+      where: { sellerId: userId }
     });
 
-    if (!user) {
-      throw new Error("User not found");
-    }
+    const bids = await prisma.bid.findMany({
+      where: { userId },
+      select: {
+        id: true,
+        amount: true,
+        createdAt: true,
+        user: {
+          select: {
+            name: true,
+          },
+        },
+      },
+      orderBy: {
+        createdAt: "desc",
+      },
+    });
 
-    return user;
+    return { auctions, bids };
+
   } catch (error) {
-    throw new Error("Invalid or expired token");
+    throw error;
   }
+
 }
 
 export default {
-  getAuthenticatedUserProfile,
+  getProfile,
   generateToken,
   registerUser,
   loginUser,

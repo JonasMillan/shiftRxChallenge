@@ -1,5 +1,6 @@
-import { Request, Response } from 'express';
-import authService from '../services/authService';
+import { Request, Response } from "express";
+import authService from "../services/authService";
+import { AuthenticatedRequest } from "../middlewares/authMiddleware";
 
 const register = async (req: Request, res: Response) => {
   try {
@@ -9,7 +10,7 @@ const register = async (req: Request, res: Response) => {
   } catch (error) {
     res.status(400).json({ error: (error as Error).message });
   }
-}
+};
 
 const login = async (req: Request, res: Response) => {
   try {
@@ -19,22 +20,17 @@ const login = async (req: Request, res: Response) => {
   } catch (error) {
     res.status(401).json({ error: (error as Error).message });
   }
-}
+};
 
-const getProfile = async (req: Request, res: Response) => {
+const getProfile = async (req: AuthenticatedRequest, res: Response) => {
+  const userId = req?.user?.userId ?? null;
   try {
-    const token = req.headers.authorization?.split(' ')[1]; // Obtener el token del encabezado Authorization
-
-    if (!token) {
-      return res.status(401).json({ error: 'No token provided' });
-    }
-
-    const user = await authService.getAuthenticatedUserProfile(token);
+    const user = await authService.getProfile(userId);
     res.json(user);
   } catch (error) {
-    res.status(401).json({ error: (error as Error).message }); // Error 401 Unauthorized
+    res.status(401).json({ error: (error as Error).message });
   }
-}
+};
 
 export default {
   getProfile,

@@ -101,7 +101,9 @@ const CreateAuctionForm = () => {
                 <Input
                   type="number"
                   {...field}
-                  onChange={(e) => field.onChange(parseFloat(e.target.value))}
+                  onChange={(e) =>
+                    field.onChange(e.target.value ? parseFloat(e.target.value) : 0)
+                  }
                 />
               </FormControl>
               <FormMessage />

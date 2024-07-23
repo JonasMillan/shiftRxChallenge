@@ -79,13 +79,28 @@ const getActiveAuctions = async (userId?: number | null) => {
 const getAuctionById = async (auctionId: number) => {
   return await prisma.auction.findUnique({
     where: { id: auctionId },
+    select: {
+      id: true,
+      title: true,
+      description: true,
+      startingPrice: true,
+      currentPrice: true,
+      endTime: true,
+      seller: {
+        select: {
+          name: true,
+          id: true,
+          email: true
+        },
+      },
+    },
   });
 };
 
 const updateAuction = async (
   auctionId: number,
   updatedAuctionData: Auction,
-  userId?: number,
+  userId?: number
 ) => {
   const existingAuction = await prisma.auction.findUnique({
     where: { id: auctionId },
