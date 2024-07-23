@@ -1,6 +1,4 @@
-Absolutely! Here's the generated README:
-
-# Project Name: ShiftRx Challenge with PostgreSQL, Node.js, and Next.js
+# ShiftRx Challenge with PostgreSQL, Node.js, and Next.js
 
 ## Getting Started:
 
