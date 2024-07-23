@@ -1,7 +1,7 @@
 import { User } from "@prisma/client";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
-import PrismaSingleton from "../singletons/prismaSingleton";
+import PrismaSingleton from "../singletons/PrismaSingleton";
 
 const prisma = PrismaSingleton.getInstance();
 

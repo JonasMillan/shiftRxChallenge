@@ -1,5 +1,5 @@
 import { Auction } from "@prisma/client";
-import PrismaSingleton from "../singletons/prismaSingleton";
+import PrismaSingleton from "../singletons/PrismaSingleton";
 
 const prisma = PrismaSingleton.getInstance();
 
