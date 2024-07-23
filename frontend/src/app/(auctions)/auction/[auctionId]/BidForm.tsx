@@ -61,7 +61,7 @@ export const BidForm = ({ auctionId }: { auctionId: number }) => {
         <SheetHeader>
           <SheetTitle>Place a Bid</SheetTitle>
           <SheetDescription>
-            Add Amount to your Bid. Click Submit when you're done.
+            Add Amount to your Bid. Click Submit when you&apos;re done.
           </SheetDescription>
         </SheetHeader>
 

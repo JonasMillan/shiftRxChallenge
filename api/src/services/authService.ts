@@ -52,14 +52,26 @@ const loginUser = async (email: string, password: string): Promise<{ user: User;
   return { user, token };
 }
 
-const getProfile = async (userId: number|null): Promise<{ auctions: Auction[], bids: BidsWithUser[] }> => {
+const getProfile = async (userId: number|null) => {
   if (!userId){
     throw new Error('Invalid Credentials');
   }
 
   try {
     const auctions = await prisma.auction.findMany({
-      where: { sellerId: userId }
+      where: { sellerId: userId },
+      select: {
+        id: true,
+        title: true,
+        description: true,
+        startingPrice: true,
+        endTime: true,
+        seller: {
+          select: {
+            name: true,
+          },
+        },
+      }
     });
 
     const bids = await prisma.bid.findMany({

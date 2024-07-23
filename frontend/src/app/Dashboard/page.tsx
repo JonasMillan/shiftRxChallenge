@@ -22,6 +22,7 @@ async function getData() {
   if (!response.ok) {
     throw new Error("Failed to fetch data");
   }
+  
   return response.json();
 }
 
