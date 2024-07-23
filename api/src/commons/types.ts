@@ -1,10 +1,10 @@
 export type Username = {
-    name: string;
-}
+  name: string;
+};
 
 export type BidsWithUser = {
-    id: number;
-    amount: number;
-    createdAt: Date;
-    user: Username;
-}
+  id: number;
+  amount: number;
+  createdAt: Date;
+  user: Username;
+};
