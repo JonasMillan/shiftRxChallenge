@@ -71,6 +71,7 @@ export async function editAuction(params: EditAuctionType, auctionId: number) {
 
 export async function placeBit(params: PostBid, auctionId: number) {
   const token = await getToken();
+
   const response: Response = await fetch(
     `http://api:4200/api/auctions/${auctionId}/bid`,
     {

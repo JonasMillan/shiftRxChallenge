@@ -2,7 +2,6 @@
 import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import {
   Sheet,
   SheetClose,
@@ -24,18 +23,23 @@ import {
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { placeBit } from "@/app/server/actions";
-import { PostBid } from "@/app/commons/types";
 import { toast } from "@/components/ui/use-toast";
 
 const FormSchema = z.object({
   amount: z.number(),
 });
 
-export const BidForm = ({ auctionId }: { auctionId: number }) => {
+export const BidForm = ({
+  auctionId,
+  currentPrice,
+}: {
+  auctionId: number;
+  currentPrice: number;
+}) => {
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
-      amount: 0,
+      amount: currentPrice + 1,
     },
   });
 
@@ -78,7 +82,9 @@ export const BidForm = ({ auctionId }: { auctionId: number }) => {
                       type="number"
                       {...field}
                       onChange={(e) =>
-                        field.onChange(e.target.value ? parseFloat(e.target.value) : 0)
+                        field.onChange(
+                          e.target.value ? parseFloat(e.target.value) : 0
+                        )
                       }
                     />
                   </FormControl>

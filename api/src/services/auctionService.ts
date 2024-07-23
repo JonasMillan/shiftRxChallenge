@@ -1,5 +1,7 @@
-import { Auction, Prisma, PrismaClient } from "@prisma/client";
-const prisma = new PrismaClient();
+import { Auction } from "@prisma/client";
+import PrismaSingleton from "../singletons/prismaSingleton";
+
+const prisma = PrismaSingleton.getInstance();
 
 type AuctionWithoutId = Omit<Auction, "id">;
 

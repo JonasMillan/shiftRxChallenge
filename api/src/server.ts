@@ -1,10 +1,11 @@
 import express, { Request, Response } from "express";
 import bodyParser from "body-parser";
 import cors, { CorsOptions } from "cors";
+import http from "http";
 import * as dotenv from "dotenv";
 import api from "./routes";
-
-import { connectSocket } from "./socket/socket";
+import SocketIOSingleton from "./singletons/SocketIoSingleton";
+import { Server } from "socket.io";
 
 dotenv.config();
 
@@ -35,7 +36,18 @@ app.get("/api/health", (req: Request, res: Response) => {
   res.status(200).json({ message: "OK" });
 });
 
-const server = connectSocket(app);
+const server = http.createServer(app);
+
+const io = new Server(server, {
+  cors: {
+    origin: "http://localhost:3000",
+    methods: ["GET", "POST"],
+    allowedHeaders: ["Content-Type"],
+  },
+});
+
+new SocketIOSingleton(io);
+
 
 server.listen(port, () => {
   console.log(`API running at ${port}`);
