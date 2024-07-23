@@ -24,17 +24,27 @@
 ## Project Structure:
 
 - `api`: Backend API built with Node.js and Express.
+- `prisma`: Prisma configuration and seed files.
 - `frontend`: Frontend built with Next.js.
 - `docker-compose.yml`: Docker Compose configuration for managing services.
 - `.env`: Development environment variables (**DO NOT USE IN PRODUCTION**)
+
+## Database Seeding:
+
+Database seeding is the process of populating your database with an initial set of data. This is useful for development and testing purposes.
+
+### How to Run Seeds:
+
+1. **Ensure your Docker containers are running:** `docker-compose up -d`
+2. **Execute the seed command:** `docker-compose exec api npx prisma db seed`
+
+This command does the following:
+
+- `docker-compose exec api`: Executes a command (`npx prisma db seed`) within the `api` container.
+- `npx prisma db seed`:  Runs Prisma's built-in seed functionality, which will look for a `seed.ts` file in your `api/prisma` directory and execute the seed logic defined there.
 
 ## Development Notes:
 
 - **Hot Reloading:** Changes to the `api` and `frontend` code will automatically trigger a rebuild and restart of the respective containers.
 - **Volumes:** Docker volumes are used to persist the database data (`db-data`) and to sync code changes from your local directories to the containers. 
 - **Healthcheck:** The database service has a healthcheck to ensure it's ready before the API starts.
-
-## Security Considerations:
-
-- **.env Files:** As mentioned, never commit `.env` files to version control. They can expose sensitive information like API keys, database credentials, and more.
-- **Production Deployment:** When deploying to production, use Docker secrets, environment variables injected via your deployment platform, or a secure vault to manage your application's sensitive configuration.
