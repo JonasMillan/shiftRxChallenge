@@ -49,6 +49,7 @@ services:
     command: npm run dev
     volumes:
       - ./frontend:/app
+      - /app/node_modules
     working_dir: /app
 volumes:
   db-data:
